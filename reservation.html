@@ -1,117 +1,266 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Réservation - New Fiestas</title>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-<!-- FullCalendar CSS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    color: white;
+}
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+/* NAVBAR */
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 
-<!-- Ton CSS -->
-<link rel="stylesheet" href="style.css">
-</head>
+header h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
 
-<body>
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 500;
+    position: relative;
+    transition: 0.3s;
+}
 
-<header>
-    <h1>✨ New Fiestas</h1>
-    <nav>
-        <a href="index.html">Accueil</a>
-        <a href="galerie.html">Galerie</a>
-        <a href="reservation.html">Réserver</a>
-    </nav>
-</header>
+nav a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #00f2ff;
+    left: 0;
+    bottom: -5px;
+    transition: 0.3s;
+}
 
-<main>
+nav a:hover::after {
+    width: 100%;
+}
 
-<section>
-    <h2>📅 Réserver une date</h2>
-    <div id="calendar"></div>
-</section>
+/* CONTENU */
+main {
+    padding-top: 140px;
+    max-width: 1000px;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
-<section>
-    <h2>Formulaire de réservation</h2>
-    <form id="reservationForm">
-        <input type="text" placeholder="Nom" required>
-        <input type="email" placeholder="Email" required>
-        <input type="date" id="dateInput" required>
-        <input type="time" required>
-        <input type="number" placeholder="Nombre de personnes" required>
-        <button type="submit">Réserver</button>
-    </form>
-</section>
+/* SECTIONS GLASS */
+section {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+}
 
-</main>
+section:hover {
+    transform: translateY(-8px);
+}
 
-<footer>
-    © 2026 New Fiestas
-</footer>
+h2 {
+    margin-bottom: 15px;
+    font-size: 26px;
+    color: #00f2ff;
+}
 
-<script type="module">
+p {
+    line-height: 1.6;
+    opacity: 0.9;
+}
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+/* BOUTONS */
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #00f2ff, #4facfe);
+    border-radius: 30px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    transition: 0.3s;
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBXunGz12bxeHIyIhsbQ12CGlVDP3E9ayc",
-    authDomain: "newfestas-e6a0d.firebaseapp.com",
-    projectId: "newfestas-e6a0d",
-};
+#calendar {
+    background: rgba(20, 20, 40, 0.8) !important;
+    padding: 20px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important;
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+.fc {
+    color: white !important;
+}
 
-document.addEventListener('DOMContentLoaded', async function () {
+/* Titre */
+.fc-toolbar-title {
+    color: #00f2ff !important;
+    font-size: 22px !important;
+}
 
-  const calendarEl = document.getElementById('calendar');
+/* Boutons */
+.fc-button {
+    background: linear-gradient(45deg, #00f2ff, #4facfe) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 6px 15px !important;
+    font-weight: bold !important;
+}
 
-  // 🔥 Récupérer les réservations Firestore
-  const querySnapshot = await getDocs(collection(db, "reservations"));
+/* Cases */
+.fc-daygrid-day {
+    transition: 0.3s !important;
+}
 
-  let events = [];
+.fc-daygrid-day:hover {
+    background: rgba(0, 242, 255, 0.2) !important;
+}
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
+/* Aujourd’hui */
+.fc-day-today {
+    background: rgba(0, 242, 255, 0.3) !important;
+}
 
-    if (data.statut === "confirmée") {
-      events.push({
-        title: "Réservé",
-        start: data.date,
-        color: "#ff4d4d"
-      });
-    }
-  });
+/* En-tête jours */
+.fc-col-header-cell-cushion {
+    color: #00f2ff !important;
+}
 
-  // 🎉 Initialiser FullCalendar
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    locale: 'fr',
-    events: events,
+/* Bordures */
+.fc-theme-standard td,
+.fc-theme-standard th {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
 
-    dateClick: function(info) {
+#calendar {
+    background: rgba(20, 20, 40, 0.9) !important;
+    border-radius: 20px;
+    padding: 15px;
+}
 
-        const dateClicked = info.dateStr;
+.fc {
+    background: transparent !important;
+    color: white !important;
+}
 
-        const isReserved = events.some(event => event.start === dateClicked);
+/* En-tête */
+.fc-toolbar-title {
+    color: #00f2ff !important;
+}
 
-        if (isReserved) {
-            alert("Date déjà réservée !");
-        } else {
-            alert("Date disponible !");
-        }
-    }
+/* Jours de la semaine */
+.fc-col-header-cell-cushion {
+    color: #00f2ff !important;
+}
 
-});
+/* Numéros des jours */
+.fc-daygrid-day-number {
+    color: white !important;
+}
 
-calendar.render();
+/* Cases */
+.fc-theme-standard td,
+.fc-theme-standard th {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
 
-});
+/* Hover */
+.fc-daygrid-day:hover {
+    background: rgba(0,242,255,0.2) !important;
+}
 
-</script>
+/* Aujourd’hui */
+.fc-day-today {
+    background: rgba(0,242,255,0.3) !important;
+}
 
-</body>
-</html>
+/* Boutons */
+.fc-button {
+    background: linear-gradient(45deg, #00f2ff, #4facfe) !important;
+    border: none !important;
+    border-radius: 20px !important;
+}
+
+header {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+nav a {
+  transition: 0.3s;
+}
+nav a:hover {
+  color: #00f2ff;
+  transform: scale(1.1);
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+.hero h1 {
+  font-size: 40px;
+  background: linear-gradient(90deg, #00f2ff, #6a5cff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.btn {
+  background: linear-gradient(45deg, #00f2ff, #6a5cff);
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: white;
+  text-decoration: none;
+}
+
+section {
+  transition: 0.3s;
+}
+section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+section {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+  }
+  section {
+    padding: 20px;
+  }
+}
+
+
+
+
+
+
+
+
