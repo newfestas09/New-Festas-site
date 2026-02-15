@@ -200,3 +200,67 @@ p {
     border: none !important;
     border-radius: 20px !important;
 }
+
+header {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+nav a {
+  transition: 0.3s;
+}
+nav a:hover {
+  color: #00f2ff;
+  transform: scale(1.1);
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+.hero h1 {
+  font-size: 40px;
+  background: linear-gradient(90deg, #00f2ff, #6a5cff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.btn {
+  background: linear-gradient(45deg, #00f2ff, #6a5cff);
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: white;
+  text-decoration: none;
+}
+
+section {
+  transition: 0.3s;
+}
+section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+section {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+  }
+  section {
+    padding: 20px;
+  }
+}
+
+
+
+
+
+
+
+
