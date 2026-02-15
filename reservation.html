@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réservation - New Fiestas</title>
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<!-- Ton CSS -->
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>✨ New Fiestas</h1>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="reservation.html">Réserver</a>
+    </nav>
+</header>
+
+<main>
+
+<section>
+    <h2>📅 Réserver une date</h2>
+    <div id="calendar"></div>
+</section>
+
+<section>
+    <h2>Formulaire de réservation</h2>
+    <form id="reservationForm">
+        <input type="text" placeholder="Nom" required>
+        <input type="email" placeholder="Email" required>
+        <input type="date" id="dateInput" required>
+        <input type="time" required>
+        <input type="number" placeholder="Nombre de personnes" required>
+        <button type="submit">Réserver</button>
+    </form>
+</section>
+
+</main>
+
+<footer>
+    © 2026 New Fiestas
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const calendarEl = document.getElementById('calendar');
+    const form = document.getElementById('reservationForm');
+    const dateInput = document.getElementById('dateInput');
+
+    // Charger les réservations
+    let reservations = JSON.parse(localStorage.getItem("reservations")) || [];
+
+    // Initialiser le calendrier
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'fr',
+        events: reservations
+    });
+
+    calendar.render();
+
+    // Soumission du formulaire
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const date = dateInput.value;
+
+        if (!date) {
+            alert("Veuillez choisir une date.");
+            return;
+        }
+
+        // Vérifier si déjà réservé
+        const dejaReserve = reservations.some(event => event.start === date);
+
+        if (dejaReserve) {
+            alert("Cette date est déjà réservée !");
+            return;
+        }
+
+        const nouvelleReservation = {
+            title: "Réservé",
+            start: date,
+            color: "red"
+        };
+
+        reservations.push(nouvelleReservation);
+        localStorage.setItem("reservations", JSON.stringify(reservations));
+
+        calendar.addEvent(nouvelleReservation);
+
+        alert("Réservation enregistrée !");
+        form.reset();
+    });
+
+});
+</script>
+
+</body>
+</html>
