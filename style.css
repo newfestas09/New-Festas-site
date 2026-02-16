@@ -283,9 +283,22 @@ menu-toggle {
 }
 
 
+.btn-paiement {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #00f2ff, #4facfe);
+    color: black;
+    font-weight: bold;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: 0.3s;
+}
 
-
-
+.btn-paiement:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
 
 
 
