@@ -1,54 +1,116 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Réservation - New Festas</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réservation - New Fiestas</title>
 
-    <!-- Lien CSS -->
-    <link rel="stylesheet" href="style.css">
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<!-- Ton CSS -->
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-    <h1>Réservation</h1>
-    <a href="index.html" class="btn-retour">⬅ Retour Accueil</a>
+    <h1>✨ New Fiestas</h1>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="reservation.html">Réserver</a>
+    </nav>
 </header>
 
+<main>
+
 <section>
-    <h2>Choisissez une date</h2>
+    <h2>📅 Réserver une date</h2>
     <div id="calendar"></div>
 </section>
 
+<section>
+    <h2>Formulaire de réservation</h2>
+    <form id="reservationForm">
+        <input type="text" placeholder="Nom" required>
+        <input type="email" placeholder="Email" required>
+        <input type="date" id="dateInput" required>
+        <input type="time" required>
+        <input type="number" placeholder="Nombre de personnes" required>
+        <button type="submit">Réserver</button>
+    </form>
+</section>
+
+</main>
+
 <footer>
-    <p>© 2026 New Festas</p>
+    © 2026 New Fiestas
 </footer>
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script type="module">
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    var calendarEl = document.getElementById('calendar');
+const firebaseConfig = {
+  apiKey: "AIzaSyBXunGz12bxeHIyIhsbQ12CGlVDP3E9ayc",
+    authDomain: "newfestas-e6a0d.firebaseapp.com",
+    projectId: "newfestas-e6a0d",
+};
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'fr',
-        height: "auto",
-        selectable: true,
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-        dateClick: function(info) {
-            alert("Date sélectionnée : " + info.dateStr);
+document.addEventListener('DOMContentLoaded', async function () {
+
+  const calendarEl = document.getElementById('calendar');
+
+  // 🔥 Récupérer les réservations Firestore
+  const querySnapshot = await getDocs(collection(db, "reservations"));
+
+  let events = [];
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+
+    if (data.statut === "confirmée") {
+      events.push({
+        title: "Réservé",
+        start: data.date,
+        color: "#ff4d4d"
+      });
+    }
+  });
+
+  // 🎉 Initialiser FullCalendar
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'fr',
+    events: events,
+
+    dateClick: function(info) {
+
+        const dateClicked = info.dateStr;
+
+        const isReserved = events.some(event => event.start === dateClicked);
+
+        if (isReserved) {
+            alert("Date déjà réservée !");
+        } else {
+            alert("Date disponible !");
         }
-    });
+    }
 
-    calendar.render();
 });
+
+calendar.render();
+
+});
+
 </script>
 
 </body>
