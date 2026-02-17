@@ -51,96 +51,60 @@
     © 2026 New Fiestas
 </footer>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBXunGz12bxeHIyIhsbQ12CGlVDP3E9ayc",
-    authDomain: "newfestas-e6a0d.firebaseapp.com",
-    projectId: "newfestas-e6a0d",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 document.addEventListener('DOMContentLoaded', async function () {
 
-  const calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
 
-  // 🔥 Récupérer les réservations Firestore
-  const querySnapshot = await getDocs(collection(db, "reservations"));
+    // 🔥 Récupérer les réservations
+    const querySnapshot = await getDocs(collection(db, "reservations"));
 
-  let events = [];
+    let events = [];
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.statut === "confirmée") {
+            events.push({
+                title: "Réservé",
+                start: data.date,
+                color: "#ff4d4d"
+            });
+        }
+    });
 
-    if (data.statut === "confirmée") {
-      events.push({
-        title: "Réservé",
-        start: data.date,
-        color: "#ff4d4d"
-      });
-    }
-  });
+    // 🎉 Initialiser FullCalendar
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'fr',
+        events: events
+    });
 
-  // 🎉 Initialiser FullCalendar
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    locale: 'fr',
-    events: events,
+    calendar.render();
 
-    dateClick: function(info) {
+    // 🔥 FORMULAIRE (DOIT être ici, après events)
+    const form = document.getElementById("reservationForm");
 
-        const dateClicked = info.dateStr;
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
 
-        const isReserved = events.some(event => event.start === dateClicked);
+        const date = document.getElementById("dateInput").value;
+
+        const isReserved = events.some(event => event.start === date);
 
         if (isReserved) {
             alert("Date déjà réservée !");
-        } else {
-            alert("Date disponible !");
+            return;
         }
-    }
 
-});
-import { addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const form = document.getElementById("reservationForm");
-
-form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const date = document.getElementById("dateInput").value;
-
-    // Vérifier si date déjà réservée
-    const isReserved = events.some(event => event.start === date);
-
-    if (isReserved) {
-        alert("Date déjà réservée !");
-        return;
-    }
-
-    try {
         await addDoc(collection(db, "reservations"), {
             date: date,
             statut: "confirmée"
         });
 
         alert("Réservation enregistrée !");
-        location.reload(); // recharge calendrier
-
-    } catch (error) {
-        console.error("Erreur :", error);
-    }
-});
-
-calendar.render();
+        location.reload();
+    });
 
 });
-
 </script>
 
 </body>
