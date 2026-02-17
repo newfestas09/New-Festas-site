@@ -70,55 +70,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     const calendarEl = document.getElementById("calendar");
 
     // 🔥 Récupérer réservations
-    const querySnapshot = await getDocs(collection(db, "reservations"));
+   import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    let events = [];
+const form = document.querySelector("form");
 
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.statut === "confirmée") {
-            events.push({
-                title: "Réservé",
-                start: data.date,
-                color: "#ff4d4d"
-            });
-        }
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nom = form.querySelector('input[type="text"]').value;
+  const email = form.querySelector('input[type="email"]').value;
+  const date = form.querySelector('input[type="date"]').value;
+  const personnes = form.querySelector('input[type="number"]').value;
+
+  try {
+    await addDoc(collection(db, "reservations"), {
+      nom: nom,
+      email: email,
+      date: date,
+      personnes: Number(personnes),
+      statut: "confirmée",
+      createdAt: new Date()
     });
 
-    // 🎉 Initialiser calendrier
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        locale: "fr",
-        events: events
-    });
+    alert("Réservation enregistrée !");
+    form.reset();
 
-    calendar.render();
-
-    // 🔥 Gestion formulaire
-    const form = document.getElementById("reservationForm");
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const date = document.getElementById("dateInput").value;
-
-        const isReserved = events.some(event => event.start === date);
-
-        if (isReserved) {
-            alert("❌ Date déjà réservée !");
-            return;
-        }
-
-        await addDoc(collection(db, "reservations"), {
-            date: date,
-            statut: "confirmée"
-        });
-
-        alert("✅ Réservation enregistrée !");
-        location.reload();
-    });
-
+  } catch (error) {
+    console.error("Erreur :", error);
+  }
 });
+
 
 </script>
 
