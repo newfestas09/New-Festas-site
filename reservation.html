@@ -1,107 +1,100 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Réservation - New Fiestas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réservation - New Fiestas</title>
 
-<!-- FullCalendar CSS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 
-<!-- Ton CSS -->
-<link rel="stylesheet" href="style.css">
-
+  <!-- Ton CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
-    <h1>✨ New Fiestas</h1>
-    <nav>
-        <a href="index.html">Accueil</a>
-        <a href="galerie.html">Galerie</a>
-        <a href="reservation.html">Réserver</a>
-    </nav>
-</header>
+  <header>
+    <h1>New Fiestas</h1>
+  </header>
 
-<main>
+  <main>
+    <section>
+      <h2>📅 Réserver une date</h2>
+      <div id="calendar"></div>
+    </section>
+  </main>
 
-<section>
-    <h2>📅 Réserver une date</h2>
-    <div id="calendar"></div>
-</section>
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<section>
-    <h2>Formulaire de réservation</h2>
-    <form id="reservationForm">
-        <input type="text" placeholder="Nom" required>
-        <input type="email" placeholder="Email" required>
-        <input type="date" id="dateInput" required>
-        <input type="number" placeholder="Nombre de personnes" required>
-        <button type="submit">Réserver</button>
-    </form>
-</section>
+  <!-- Script Firebase + Calendar -->
+  <script type="module">
 
-</main>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<footer>
-    © 2026 New Fiestas
-</footer>
+    // 🔥 CONFIG FIREBASE (REMPLACE PAR LA TIENNE)
+    const firebaseConfig = {
+      apiKey: "TA_API_KEY",
+      authDomain: "TA_AUTH_DOMAIN",
+      projectId: "TA_PROJECT_ID",
+      storageBucket: "TA_STORAGE_BUCKET",
+      messagingSenderId: "TA_SENDER_ID",
+      appId: "TA_APP_ID"
+    };
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<!-- SCRIPT PRINCIPAL -->
-<script type="module">
+    document.addEventListener("DOMContentLoaded", async () => {
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      const calendarEl = document.getElementById("calendar");
 
-const firebaseConfig = {
- apiKey: "AIzaSyBXunGz12bxeHIyIhsbQ12CGlVDP3E9ayc",
-    authDomain: "newfestas-e6a0d.firebaseapp.com",
-    projectId: "newfestas-e6a0d",
-};
+      // 🔥 Récupérer réservations confirmées
+      const querySnapshot = await getDocs(collection(db, "reservations"));
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+      let events = [];
 
-document.addEventListener("DOMContentLoaded", async () => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
 
-    const calendarEl = document.getElementById("calendar");
+        if (data.statut === "confirmée") {
+          events.push({
+            title: "Réservé",
+            start: data.date,
+            color: "#ff4d4d"
+          });
+        }
+      });
 
-    // 🔥 Récupérer réservations
-   import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      // 🎉 Initialiser FullCalendar
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        locale: "fr",
+        events: events,
 
-const form = document.querySelector("form");
+        dateClick: function(info) {
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+          const clickedDate = info.dateStr;
 
-  const nom = form.querySelector('input[type="text"]').value;
-  const email = form.querySelector('input[type="email"]').value;
-  const date = form.querySelector('input[type="date"]').value;
-  const personnes = form.querySelector('input[type="number"]').value;
+          const isReserved = events.some(event => event.start === clickedDate);
 
-  try {
-    await addDoc(collection(db, "reservations"), {
-      nom: nom,
-      email: email,
-      date: date,
-      personnes: Number(personnes),
-      statut: "confirmée",
-      createdAt: new Date()
+          if (isReserved) {
+            alert("❌ Date déjà réservée !");
+          } else {
+            alert("✅ Date disponible !");
+          }
+
+        }
+
+      });
+
+      calendar.render();
+
     });
 
-    alert("Réservation enregistrée !");
-    form.reset();
-
-  } catch (error) {
-    console.error("Erreur :", error);
-  }
-});
-
-
-</script>
+  </script>
 
 </body>
 </html>
