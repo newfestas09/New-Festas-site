@@ -8,13 +8,10 @@
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
 <!-- Ton CSS -->
 <link rel="stylesheet" href="style.css">
-</head>
 
+</head>
 <body>
 
 <header>
@@ -39,7 +36,6 @@
         <input type="text" placeholder="Nom" required>
         <input type="email" placeholder="Email" required>
         <input type="date" id="dateInput" required>
-        <input type="time" required>
         <input type="number" placeholder="Nombre de personnes" required>
         <button type="submit">Réserver</button>
     </form>
@@ -51,11 +47,29 @@
     © 2026 New Fiestas
 </footer>
 
-document.addEventListener('DOMContentLoaded', async function () {
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-    const calendarEl = document.getElementById('calendar');
+<!-- SCRIPT PRINCIPAL -->
+<script type="module">
 
-    // 🔥 Récupérer les réservations
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "TON_API_KEY",
+  authDomain: "TON_AUTH_DOMAIN",
+  projectId: "TON_PROJECT_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const calendarEl = document.getElementById("calendar");
+
+    // 🔥 Récupérer réservations
     const querySnapshot = await getDocs(collection(db, "reservations"));
 
     let events = [];
@@ -71,19 +85,19 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
-    // 🎉 Initialiser FullCalendar
+    // 🎉 Initialiser calendrier
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'fr',
+        initialView: "dayGridMonth",
+        locale: "fr",
         events: events
     });
 
     calendar.render();
 
-    // 🔥 FORMULAIRE (DOIT être ici, après events)
+    // 🔥 Gestion formulaire
     const form = document.getElementById("reservationForm");
 
-    form.addEventListener("submit", async function(e) {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const date = document.getElementById("dateInput").value;
@@ -91,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const isReserved = events.some(event => event.start === date);
 
         if (isReserved) {
-            alert("Date déjà réservée !");
+            alert("❌ Date déjà réservée !");
             return;
         }
 
@@ -100,11 +114,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             statut: "confirmée"
         });
 
-        alert("Réservation enregistrée !");
+        alert("✅ Réservation enregistrée !");
         location.reload();
     });
 
 });
+
 </script>
 
 </body>
