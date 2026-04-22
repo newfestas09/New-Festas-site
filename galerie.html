@@ -1,1 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Galerie - NEW FESTAS</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
 
+<header>
+    <h1>Bienvenue avec NEW FESTAS 🎉</h1>
+    <button class="menu-toggle">☰</button>
+    <nav class="nav-mobile">
+        <a href="index.html">Accueil</a>
+        <a href="index.html#apropos">À propos</a>
+        <a href="galerie.html" class="active">Galerie</a>
+        <a href="reservation.html">Réservation</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="index.html#tarifs">Tarifs</a>
+    </nav>
+</header>
+
+<main>
+    <section class="galerie">
+        <h2><i class="fa-solid fa-images"></i> Notre Galerie</h2>
+        <p>Découvrez l'ambiance de nos événements : anniversaires, mariages, baptêmes et soirées privées dans notre salle à Chelles.</p>
+
+        <div class="gallery-grid">
+            <!-- 🎂 Anniversaires -->
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80" alt="Anniversaire décoré" loading="lazy">
+                <h3>Anniversaire</h3>
+                <p>Ballons, gâteau et ambiance festive</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1464347744102-11db6282f854?auto=format&fit=crop&w=800&q=80" alt="Soirée anniversaire" loading="lazy">
+                <h3>Anniversaire</h3>
+                <p>Soirée sur mesure</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1514845505178-849cebf1a91d?auto=format&fit=crop&w=800&q=80" alt="Table d'anniversaire" loading="lazy">
+                <h3>Anniversaire</h3>
+                <p>Décoration de table</p>
+            </div>
+
+            <!-- 💍 Mariages -->
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Salle de mariage" loading="lazy">
+                <h3>Mariage</h3>
+                <p>Salle décorée avec élégance</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" alt="Table de mariage" loading="lazy">
+                <h3>Mariage</h3>
+                <p>Réception raffinée</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=800&q=80" alt="Cérémonie de mariage" loading="lazy">
+                <h3>Mariage</h3>
+                <p>Moments inoubliables</p>
+            </div>
+
+            <!-- 👶 Baptêmes -->
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" alt="Baptême décoré" loading="lazy">
+                <h3>Baptême</h3>
+                <p>Douceur et tendresse</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1523294587484-bae6cc870010?auto=format&fit=crop&w=800&q=80" alt="Table de baptême" loading="lazy">
+                <h3>Baptême</h3>
+                <p>Thème pastel</p>
+            </div>
+
+            <!-- 🎉 Soirées privées -->
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80" alt="Soirée privée" loading="lazy">
+                <h3>Soirée privée</h3>
+                <p>Ambiance DJ et lumières</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80" alt="Soirée cocktail" loading="lazy">
+                <h3>Soirée privée</h3>
+                <p>Cocktail entre amis</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?auto=format&fit=crop&w=800&q=80" alt="Danse et fête" loading="lazy">
+                <h3>Soirée privée</h3>
+                <p>Piste de danse</p>
+            </div>
+
+            <div class="card" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" alt="Décoration de salle" loading="lazy">
+                <h3>Notre salle</h3>
+                <p>Jusqu'à 80 personnes</p>
+            </div>
+        </div>
+
+        <a href="reservation.html" class="btn">Réserver votre événement</a>
+    </section>
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<footer>
+    <p>© 2026 NEW FESTAS - Tous droits réservés</p>
+</footer>
+
+<script>
+    // Menu mobile
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.nav-mobile').classList.toggle('active');
+    });
+
+    // Lightbox
+    function openLightbox(card) {
+        const img = card.querySelector('img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Escape key closes lightbox
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+
+</body>
+</html>
